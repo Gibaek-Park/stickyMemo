@@ -4,7 +4,7 @@ const path = require('path');
 module.exports = {
   mode: 'development',
   entry: {
-    app: './app.js',
+    app: './src/index.js',
   },
   output: {
     filename: '[name].js',
@@ -18,7 +18,12 @@ module.exports = {
         [
           { loader: "babel-loader" }
         ]
-    }]
+    },
+    {
+      test: /\.css$/,
+      use: ['style-loader', 'css-loader'],
+    }
+    ]
   },
   plugins: [],
   optimization: {},
