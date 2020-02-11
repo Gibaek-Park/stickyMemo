@@ -19,21 +19,16 @@ class Memo {
   }
 
   getMemoNodeElement() {
-    // const form = `<div class="memo" style="top:100px;left:100px">
-    const form = `<div class="memo" style="top:${this.top}px;left:${this.left}px;z-Index:${this.zIndex}">
-      <div class="header">
-        <h1 class="blind">메모장</h1>
-        <button class="btn_close"><span class="blind">닫기</span></button>
-      </div>
-      <div class="content">
-        <div class="textarea" contenteditable="true" style="width:${this.width}px;height:${this.height}px">
-        ${this.contetn}
-        </div>
-        <button class="btn_size"><span class="blind">메모장 크기 조절</span></button>
-      </div>
-    </div>`;
+    const temp = document.getElementsByTagName("template")[0];
+    const clone = temp.content.cloneNode(true);
+    const cloneWrap = clone.querySelector('.memo');
+    const cloneTextArea = cloneWrap.querySelector('.textarea');
 
-    return form;
+    cloneWrap.setAttribute('style', `top:${this.top}px;left:${this.left}px;z-Index:${this.zIndex}`);
+    cloneTextArea.setAttribute('style', `width:${this.width}px;height:${this.height}px`);
+    cloneTextArea.innerText = this.content;
+
+    return clone;
   }
   getMemoListItems() {
     // 현재 momo listItems를 return
