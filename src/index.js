@@ -1,29 +1,7 @@
 import Memo from './js/Memo';
 import './css/Memo.css';
 
-const setting = {
-  init: () => {
-    const wrap = document.querySelector('#Wrap');
-
-    if (localStorage.length === 0 || localStorage.getItem('listItems')[0] !== '[') {
-      const memo = new Memo('a라는 메모', 200, 200, 200, 200, 0);
-      const clone = memo.getMemoNodeElement();
-      wrap.appendChild(clone);
-    } else {
-      const listItems = JSON.parse(localStorage.getItem('listItems'));
-
-      listItems.forEach(iter => {
-        const { content, width, height, top, left, zIndex } = iter;
-        const memo = new Memo(content, width, height, top, left, zIndex);
-        const clone = memo.getMemoNodeElement();
-        wrap.appendChild(clone);
-      });
-
-    }
-  }
-}
-
-setting.init();
+Memo.init();
 
 // modck data
 
