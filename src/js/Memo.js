@@ -1,3 +1,4 @@
+import convertData from '../../utils/convertData';
 class Memo {
   static listItems = []
   constructor(content, width, height, top, left) {
@@ -7,13 +8,6 @@ class Memo {
     this.top = top;
     this.left = left;
 
-    Memo.listItems.push({
-      content,
-      width,
-      height,
-      top,
-      left,
-    });
   }
 
   static init() {
@@ -43,22 +37,37 @@ class Memo {
     cloneTextArea.setAttribute('style', `width:${this.width}px;height:${this.height}px`);
     cloneTextArea.textContent = this.content;
 
-    memo.addEventListener('contextmenu', e => this.addMemoEvent(e, memo)); 
-    // Todo event 나누기
+    memo.addEventListener('conte내tmenu', e => this.addMemoEvent(e, memo));
+    this.setMemoListItems(this);
 
     wrap.appendChild(clone);
-  }
-  
+  };
+
   addMemoEvent(e, target) {
     e.preventDefault();
+
+    let { top, left } = target.getBoundingClientRect();
+    top += 50;
+    left += 60;
+
     const wrap = document.querySelector('#wrap');
-
-    const { top, left } = target.getBoundingClientRect();
     const clone = target.cloneNode(true);
-    clone.style.cssText = `top: ${top + 50}px;left: ${left + 60}px`;
 
-    clone.addEventListener('contextmenu', e => this.addMemoEvent(e, clone) ); 
-    
+    const textAreaStyle = clone.children[1].children[0].style;
+    const width = convertData.toNumber(textAreaStyle.width);
+    const height = convertData.toNumber(textAreaStyle.height);
+
+    clone.style.cssText = `top: ${top}px;left: ${left}px`;
+
+    clone.addEventListener('contextmenu', e => this.addMemoEvent(e, clone));
+    this.setMemoListItems({
+      content: '',
+      width,
+      height,
+      top,
+      left
+    });
+
     wrap.appendChild(clone);
 
   }
@@ -67,8 +76,8 @@ class Memo {
     // 현재 momo listItems를 return
     return Memo.listItems;
   }
-  setMemoListItems() {
-    // 현재 memo listItems를 localStorage에 저장
+  setMemoListItems({ content, width, height, top, left }) {
+    Memo.listItems.push({ content, width, height, top, left });
     localStorage.setItem('listItems', JSON.stringify(Memo.listItems));
   }
   add() {
