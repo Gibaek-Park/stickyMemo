@@ -1,12 +1,11 @@
 class Memo {
   static listItems = []
-  constructor(content, width, height, top, left, zIndex) {
+  constructor(content, width, height, top, left) {
     this.content = content;
     this.width = width;
     this.height = height;
     this.top = top;
     this.left = left;
-    this.zIndex = zIndex;
 
     Memo.listItems.push({
       content,
@@ -14,39 +13,58 @@ class Memo {
       height,
       top,
       left,
-      zIndex
     });
   }
 
   static init() {
-
     if (localStorage.length === 0 || localStorage.getItem('listItems')[0] !== '[') {
-      const memo = new Memo('a라는 메모', 200, 200, 200, 200, 0);
-      memo.setMemo({ ...memo });
+      const memo = new Memo('a라는 메모', 200, 200, 200, 200);
+      memo.setMemo();
     } else {
       const listItems = JSON.parse(localStorage.getItem('listItems'));
       listItems.forEach(iter => {
-        const { content, width, height, top, left, zIndex } = iter;
-        const memo = new Memo(content, width, height, top, left, zIndex);
-        memo.setMemo({ ...iter });
+        const { content, width, height, top, left } = iter;
+        const memo = new Memo(content, width, height, top, left);
+        memo.setMemo();
       });
     }
   }
 
-  setMemo({ content, width, height, top, left, zIndex }) {
-    const wrap = document.querySelector('#Wrap');
+  setMemo() {
+    const wrap = document.querySelector('#wrap');
 
     const temp = document.getElementsByTagName("template")[0];
     const clone = temp.content.cloneNode(true);
+    const memo = clone.children[0];
     const cloneWrap = clone.querySelector('.memo');
     const cloneTextArea = cloneWrap.querySelector('.textarea');
 
-    cloneWrap.setAttribute('style', `top:${this.top}px;left:${this.left}px;z-Index:${this.zIndex}`);
+    cloneWrap.setAttribute('style', `top:${this.top}px;left:${this.left}px;`);
     cloneTextArea.setAttribute('style', `width:${this.width}px;height:${this.height}px`);
-    cloneTextArea.innerText = this.content;
+    cloneTextArea.textContent = this.content;
+
+    memo.addEventListener('contextmenu', e => this.setMemoEvent(e, memo)); 
+    // Todo event 나누기
 
     wrap.appendChild(clone);
   }
+  setMemoEvent(e, target) {
+    e.preventDefault();
+    const wrap = document.querySelector('#wrap');
+
+    const { top, left } = target.getBoundingClientRect();
+    const clone = target.cloneNode(true);
+    clone.style.cssText = `top: ${top + 50}px;left: ${left + 60}px`;
+
+    clone.addEventListener('contextmenu', e => this.setMemoEvent(e, clone) ); 
+    
+    wrap.appendChild(clone);
+
+  }
+  addMemo() {
+
+  }
+
   getMemoListItems() {
     // 현재 momo listItems를 return
     return Memo.listItems;
