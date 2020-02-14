@@ -19,18 +19,18 @@ class Memo {
   static init() {
     if (localStorage.length === 0 || localStorage.getItem('listItems')[0] !== '[') {
       const memo = new Memo('a라는 메모', 200, 200, 200, 200);
-      memo.setMemo();
+      memo.createMemo();
     } else {
       const listItems = JSON.parse(localStorage.getItem('listItems'));
       listItems.forEach(iter => {
         const { content, width, height, top, left } = iter;
         const memo = new Memo(content, width, height, top, left);
-        memo.setMemo();
+        memo.createMemo();
       });
     }
   }
 
-  setMemo() {
+  createMemo() {
     const wrap = document.querySelector('#wrap');
 
     const temp = document.getElementsByTagName("template")[0];
@@ -43,12 +43,13 @@ class Memo {
     cloneTextArea.setAttribute('style', `width:${this.width}px;height:${this.height}px`);
     cloneTextArea.textContent = this.content;
 
-    memo.addEventListener('contextmenu', e => this.setMemoEvent(e, memo)); 
+    memo.addEventListener('contextmenu', e => this.addMemoEvent(e, memo)); 
     // Todo event 나누기
 
     wrap.appendChild(clone);
   }
-  setMemoEvent(e, target) {
+  
+  addMemoEvent(e, target) {
     e.preventDefault();
     const wrap = document.querySelector('#wrap');
 
@@ -56,12 +57,9 @@ class Memo {
     const clone = target.cloneNode(true);
     clone.style.cssText = `top: ${top + 50}px;left: ${left + 60}px`;
 
-    clone.addEventListener('contextmenu', e => this.setMemoEvent(e, clone) ); 
+    clone.addEventListener('contextmenu', e => this.addMemoEvent(e, clone) ); 
     
     wrap.appendChild(clone);
-
-  }
-  addMemo() {
 
   }
 
