@@ -37,7 +37,7 @@ class Memo {
     cloneTextArea.setAttribute('style', `width:${this.width}px;height:${this.height}px`);
     cloneTextArea.textContent = this.content;
 
-    memo.addEventListener('conte내tmenu', e => this.addMemoEvent(e, memo));
+    memo.addEventListener('contextmenu', e => this.addMemoEvent(e, memo));
     this.setMemoListItems(this);
 
     wrap.appendChild(clone);
@@ -53,11 +53,13 @@ class Memo {
     const wrap = document.querySelector('#wrap');
     const clone = target.cloneNode(true);
 
-    const textAreaStyle = clone.children[1].children[0].style;
+    const textArea = clone.children[1].children[0];
+    const textAreaStyle = textArea.style;
     const width = convertData.toNumber(textAreaStyle.width);
     const height = convertData.toNumber(textAreaStyle.height);
 
     clone.style.cssText = `top: ${top}px;left: ${left}px`;
+    textArea.textContent = '';
 
     clone.addEventListener('contextmenu', e => this.addMemoEvent(e, clone));
     this.setMemoListItems({
