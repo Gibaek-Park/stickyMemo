@@ -26,24 +26,26 @@ class Memo {
 
   createMemo() {
     const wrap = document.querySelector('#wrap');
-
     const temp = document.getElementsByTagName("template")[0];
     const clone = temp.content.cloneNode(true);
-    const memo = clone.children[0];
     const cloneWrap = clone.querySelector('.memo');
+    const btnClose = clone.querySelector('.btn_close');
     const cloneTextArea = cloneWrap.querySelector('.textarea');
 
     cloneWrap.setAttribute('style', `top:${this.top}px;left:${this.left}px;`);
     cloneTextArea.setAttribute('style', `width:${this.width}px;height:${this.height}px`);
     cloneTextArea.textContent = this.content;
 
-    memo.addEventListener('contextmenu', e => this.addMemoEvent(e, memo));
-    this.setMemoListItems(this);
+    cloneWrap.addEventListener('contextmenu', e => this.add(e, cloneWrap));
+    btnClose.addEventListener('click', this.remove.bind(this));
+
+    this.addMemoListItems(this);
+    this.setMemoListItems();
 
     wrap.appendChild(clone);
   };
 
-  addMemoEvent(e, target) {
+  add(e, target) {
     e.preventDefault();
 
     let { top, left } = target.getBoundingClientRect();
@@ -52,7 +54,7 @@ class Memo {
 
     const wrap = document.querySelector('#wrap');
     const clone = target.cloneNode(true);
-
+    const btnClose = clone.querySelector('.btn_close');
     const textArea = clone.children[1].children[0];
     const textAreaStyle = textArea.style;
     const width = convertData.toNumber(textAreaStyle.width);
@@ -61,37 +63,48 @@ class Memo {
     clone.style.cssText = `top: ${top}px;left: ${left}px`;
     textArea.textContent = '';
 
-    clone.addEventListener('contextmenu', e => this.addMemoEvent(e, clone));
-    this.setMemoListItems({
+    clone.addEventListener('contextmenu', e => this.add(e, clone));
+    btnClose.addEventListener('click', this.remove.bind(this));
+
+    this.addMemoListItems({
       content: '',
       width,
       height,
       top,
       left
     });
+    this.setMemoListItems();
 
     wrap.appendChild(clone);
+  };
+  remove(e) {
+    const wrap = document.querySelector('#wrap');
 
-  }
+    Array.from(wrap.children).forEach( (iter, idx) => {
+      iter.setAttribute('index', idx);
+    });
+
+    const index = Number(e.currentTarget.parentNode.parentNode.getAttribute('index'));
+    const target = wrap.children[index];
+    wrap.removeChild(target);
+    this.updateMemoListItems(index);
+    
+  };
 
   getMemoListItems() {
     // 현재 momo listItems를 return
     return Memo.listItems;
   }
-  setMemoListItems({ content, width, height, top, left }) {
+  addMemoListItems({ content, width, height, top, left }) {
     Memo.listItems.push({ content, width, height, top, left });
-    localStorage.setItem('listItems', JSON.stringify(Memo.listItems));
   }
-  add() {
-    // 해당 메모와 같은 크기의 메모를 생성
+  setMemoListItems(listItems = Memo.listItems) {
+    localStorage.setItem('listItems', JSON.stringify(listItems));
   }
-  remove() {
-    // 해당 메모를 삭제
-  }
-  update() {
+  updateMemoListItems(index) {
+    Memo.listItems = Memo.listItems.filter((item, idx) => idx !== index);
+    this.setMemoListItems();
   }
 };
-
-
 
 export default Memo;
