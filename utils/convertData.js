@@ -4,4 +4,4 @@ const convertData = {
   }
 }
 
-export default convertData;
+export const { toNumber } = convertData;
