@@ -57,12 +57,12 @@ q:after {
   margin: -1px;
 }
 
-.wrap {
+#wrap {
   height: 100%;
   background-color: #f2f2f2;
 }
 
-.wrap .header {
+#wrap .header {
   position: relative;
   height: 15px;
   background-color: #f9f978;
