@@ -94,12 +94,12 @@ class Memo {
     return Memo.listItems;
   };
   addMemoListItems({ content, width, height, top, left }) {
-    Memo.listItems.push({ content, width, height, top, left });
-    this.setMemoListItems();
+    const listItems = Memo.listItems.concat({ content, width, height, top, left });
+    this.setMemoListItems(listItems);
   };
   updateMemoListItems(index) {
-    Memo.listItems = Memo.listItems.filter((item, idx) => idx !== index);
-    this.setMemoListItems();
+    const listItems = Memo.listItems.filter((item, idx) => idx !== index);
+    this.setMemoListItems(listItems);
   };
   setMemoListItems(listItems = Memo.listItems) {
     localStorage.setItem('listItems', JSON.stringify(listItems));
