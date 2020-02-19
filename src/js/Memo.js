@@ -1,4 +1,4 @@
-import convertData from '../../utils/convertData';
+import { targetNode } from '../../utils/targetNode';
 class Memo {
   static listItems = []
   constructor(content, width, height, top, left) {
@@ -7,7 +7,6 @@ class Memo {
     this.height = height;
     this.top = top;
     this.left = left;
-
   }
 
   static init() {
@@ -19,6 +18,7 @@ class Memo {
       listItems.forEach(iter => {
         const { content, width, height, top, left } = iter;
         const memo = new Memo(content, width, height, top, left);
+        console.log(iter);
         memo.createMemo();
       });
     }
@@ -38,9 +38,9 @@ class Memo {
 
     cloneWrap.addEventListener('contextmenu', e => this.add(e, cloneWrap));
     btnClose.addEventListener('click', this.remove.bind(this));
+    cloneTextArea.addEventListener('keyup', this.editTextArea.bind(this));
 
     this.addMemoListItems(this);
-    this.setMemoListItems();
 
     wrap.appendChild(clone);
   };
@@ -54,17 +54,17 @@ class Memo {
 
     const wrap = document.querySelector('#wrap');
     const clone = target.cloneNode(true);
+    const cloneTextArea = clone.children[1].children[0];
     const btnClose = clone.querySelector('.btn_close');
-    const textArea = clone.children[1].children[0];
-    const textAreaStyle = textArea.style;
-    const width = convertData.toNumber(textAreaStyle.width);
-    const height = convertData.toNumber(textAreaStyle.height);
+    const textArea = target.children[1].children[0];
+    const { width, height } = textArea.getBoundingClientRect();
 
     clone.style.cssText = `top: ${top}px;left: ${left}px`;
-    textArea.textContent = '';
+    cloneTextArea.textContent = '';
 
     clone.addEventListener('contextmenu', e => this.add(e, clone));
     btnClose.addEventListener('click', this.remove.bind(this));
+    cloneTextArea.addEventListener('keyup', this.editTextArea.bind(this));
 
     this.addMemoListItems({
       content: '',
@@ -73,38 +73,38 @@ class Memo {
       top,
       left
     });
-    this.setMemoListItems();
 
     wrap.appendChild(clone);
   };
   remove(e) {
-    const wrap = document.querySelector('#wrap');
+    const [index, target] = targetNode(e);
 
-    Array.from(wrap.children).forEach( (iter, idx) => {
-      iter.setAttribute('index', idx);
-    });
-
-    const index = Number(e.currentTarget.parentNode.parentNode.getAttribute('index'));
-    const target = wrap.children[index];
     wrap.removeChild(target);
     this.updateMemoListItems(index);
-    
   };
 
-  getMemoListItems() {
-    // 현재 momo listItems를 return
-    return Memo.listItems;
+  editTextArea(e) {
+    const content = e.target.textContent;
+    const [index, target] = targetNode(e);
+    const listItems = Memo.listItems.map( (item, idx) => idx === index ? {...item, content} : item );
+
+    this.setMemoListItems(listItems);
   }
+
+  getMemoListItems() {
+    return Memo.listItems;
+  };
   addMemoListItems({ content, width, height, top, left }) {
     Memo.listItems.push({ content, width, height, top, left });
-  }
-  setMemoListItems(listItems = Memo.listItems) {
-    localStorage.setItem('listItems', JSON.stringify(listItems));
-  }
+    this.setMemoListItems();
+  };
   updateMemoListItems(index) {
     Memo.listItems = Memo.listItems.filter((item, idx) => idx !== index);
     this.setMemoListItems();
-  }
+  };
+  setMemoListItems(listItems = Memo.listItems) {
+    localStorage.setItem('listItems', JSON.stringify(listItems));
+  };
 };
 
 export default Memo;
