@@ -18,7 +18,6 @@ class Memo {
       listItems.forEach(iter => {
         const { content, width, height, top, left } = iter;
         const memo = new Memo(content, width, height, top, left);
-        console.log(iter);
         memo.createMemo();
       });
     }
