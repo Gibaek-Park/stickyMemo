@@ -5,7 +5,7 @@ export const targetNode = (e) => {
     iter.setAttribute('index', idx);
   });
 
-  const index = Number(e.currentTarget.parentNode.parentNode.getAttribute('index'));
+  const index = Number(e.target.parentNode.parentNode.getAttribute('index'));
   const target = wrap.children[index];
 
   return [index, target];
