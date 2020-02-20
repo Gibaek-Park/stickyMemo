@@ -8,5 +8,5 @@ export const targetNode = (e) => {
   const index = Number(e.currentTarget.getAttribute('index'));
   const target = wrap.children[index];
 
-  return [index, target];
+  return [target, index];
 }
