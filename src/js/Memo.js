@@ -36,8 +36,8 @@ class Memo {
     cloneTextArea.textContent = this.content;
 
     cloneWrap.addEventListener('contextmenu', e => this.add(e, cloneWrap));
-    btnClose.addEventListener('click', this.remove.bind(this));
-    cloneTextArea.addEventListener('keyup', this.editTextArea.bind(this));
+    btnClose.addEventListener('click', e => this.remove(e));
+    cloneTextArea.addEventListener('keyup', e => this.editTextArea(e));
 
     this.addMemoListItems(this);
 
@@ -62,8 +62,8 @@ class Memo {
     cloneTextArea.textContent = '';
 
     clone.addEventListener('contextmenu', e => this.add(e, clone));
-    btnClose.addEventListener('click', this.remove.bind(this));
-    cloneTextArea.addEventListener('keyup', this.editTextArea.bind(this));
+    btnClose.addEventListener('click', e => this.remove(e));
+    cloneTextArea.addEventListener('keyup', e => this.editTextArea(e));
 
     this.addMemoListItems({
       content: '',
@@ -85,7 +85,7 @@ class Memo {
   editTextArea(e) {
     const content = e.target.textContent;
     const [index, target] = targetNode(e);
-    const listItems = Memo.listItems.map( (item, idx) => idx === index ? {...item, content} : item );
+    const listItems = Memo.listItems.map((item, idx) => idx === index ? { ...item, content } : item);
 
     this.setMemoListItems(listItems);
   }
