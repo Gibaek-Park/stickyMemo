@@ -102,6 +102,7 @@ class Memo {
     this.setMemoListItems(listItems);
   };
   setMemoListItems(listItems = Memo.listItems) {
+    Memo.listItems = listItems;
     localStorage.setItem('listItems', JSON.stringify(listItems));
   };
 };
