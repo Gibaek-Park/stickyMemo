@@ -1,4 +1,3 @@
-import { targetNode } from '../../utils/targetNode';
 class Memo {
   static listItems = []
   constructor(content, width, height, top, left) {
