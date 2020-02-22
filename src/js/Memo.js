@@ -1,3 +1,5 @@
+import { types as TYPES } from '../types'
+
 class Memo {
   static listItems = []
   constructor(content, width, height, top, left) {
@@ -102,7 +104,7 @@ class Memo {
 
     wrap.removeChild(target);
     this.updateMemoListItems(index);
-    this.sortMemoListItems(index, 'DELETE');
+    this.sortMemoListItems(index, TYPES.DELETE);
   };
   editTextArea(e) {
     const content = e.target.textContent;
@@ -132,7 +134,7 @@ class Memo {
     const wrap = document.querySelector('#wrap');
     // index 재 정의 겸 listItems 재 정렬
 
-    if (type !== 'DELETE') {
+    if (type !== TYPES.DELETE) {
       Array.from(wrap.children).forEach((iter, idx) => {
         iter.setAttribute('index', idx);
       });
