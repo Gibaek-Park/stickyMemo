@@ -58,7 +58,7 @@ class Memo {
     const clone = target.cloneNode(true);
     const cloneTextArea = clone.children[1].children[0];
     const btnClose = clone.querySelector('.btn_close');
-    const textArea = clone.children[1].children[0];
+    const textArea = target.children[1].children[0];
     const { width, height } = textArea.getBoundingClientRect();
     const MaxIndex = wrap.children.length;
 
