@@ -29,7 +29,7 @@ class Memo {
     const temp = document.getElementsByTagName("template")[0];
     const clone = temp.content.cloneNode(true);
     const cloneWrap = clone.querySelector('.memo');
-    const btnClose = clone.querySelector('.btn_close');
+    const btnClose = cloneWrap.querySelector('.btn_close');
     const cloneTextArea = cloneWrap.querySelector('.textarea');
 
     cloneWrap.setAttribute('style', `top:${this.top}px;left:${this.left}px;`);
@@ -58,7 +58,7 @@ class Memo {
     const clone = target.cloneNode(true);
     const cloneTextArea = clone.children[1].children[0];
     const btnClose = clone.querySelector('.btn_close');
-    const textArea = target.children[1].children[0];
+    const textArea = clone.children[1].children[0];
     const { width, height } = textArea.getBoundingClientRect();
     const MaxIndex = wrap.children.length;
 
