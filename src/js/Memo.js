@@ -39,6 +39,7 @@ class Memo {
 
     cloneWrap.addEventListener('contextmenu', e => this.add(e, cloneWrap));
     cloneWrap.addEventListener('click', e => this.setPosition(e));
+    cloneWrap.addEventListener('dragend', e => this.dragEnd(e));
     btnClose.addEventListener('click', e => this.remove(e));
     cloneTextArea.addEventListener('keyup', e => this.editTextArea(e));
 
@@ -68,6 +69,7 @@ class Memo {
 
     clone.addEventListener('contextmenu', e => this.add(e, clone));
     clone.addEventListener('click', e => this.setPosition(e));
+    clone.addEventListener('dragend', e => this.dragEnd(e));
     btnClose.addEventListener('click', e => this.remove(e));
     cloneTextArea.addEventListener('keyup', e => this.editTextArea(e));
 
@@ -113,6 +115,17 @@ class Memo {
 
     this.setMemoListItems(listItems);
   };
+  dragEnd(e) {
+    const target = e.currentTarget;
+    const top = e.pageY;
+    const left = e.pageX;
+    target.style = `top:${top}px;left:${left}px`;
+    const index = Number(target.getAttribute('index'));
+    const listItems = Memo.listItems.map((item, idx) => idx === index ? { ...item, top, left } : item);
+
+    this.setMemoListItems(listItems);
+  };
+
   getMemoListItems() {
     return Memo.listItems;
   };
