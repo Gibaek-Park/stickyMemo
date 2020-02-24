@@ -39,8 +39,8 @@ class Memo {
 
     cloneWrap.addEventListener('contextmenu', e => this.add(e, cloneWrap));
     cloneWrap.addEventListener('click', e => this.setPosition(e));
-    cloneWrap.addEventListener('dragstart', e => this.dragStart(e));
-    cloneWrap.addEventListener('dragend', e => this.dragEnd(e));
+    cloneWrap.addEventListener('dragstart', e => this.memoDragStart(e));
+    cloneWrap.addEventListener('dragend', e => this.memoDragEnd(e));
     btnClose.addEventListener('click', e => this.remove(e));
     cloneTextArea.addEventListener('keyup', e => this.editTextArea(e));
 
@@ -70,8 +70,8 @@ class Memo {
 
     clone.addEventListener('contextmenu', e => this.add(e, clone));
     clone.addEventListener('click', e => this.setPosition(e));
-    clone.addEventListener('dragstart', e => this.dragStart(e));
-    clone.addEventListener('dragend', e => this.dragEnd(e));
+    clone.addEventListener('dragstart', e => this.memoDragStart(e));
+    clone.addEventListener('dragend', e => this.memoDragEnd(e));
     btnClose.addEventListener('click', e => this.remove(e));
     cloneTextArea.addEventListener('keyup', e => this.editTextArea(e));
 
@@ -117,11 +117,11 @@ class Memo {
 
     this.setMemoListItems(listItems);
   };
-  dragStart(e) {
+  memoDragStart(e) {
     this.prevTop = e.pageY;
     this.prevLeft = e.pageX;
   };
-  dragEnd(e) {
+  memoDragEnd(e) {
     const target = e.currentTarget;
     const targetTop = target.offsetTop;
     const targetLeft = target.offsetLeft;
