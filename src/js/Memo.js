@@ -29,8 +29,10 @@ class Memo {
     const temp = document.getElementsByTagName("template")[0];
     const clone = temp.content.cloneNode(true);
     const cloneWrap = clone.querySelector('.memo');
+    const cloneHeader = cloneWrap.querySelector('.header');
     const btnClose = cloneWrap.querySelector('.btn_close');
     const cloneTextArea = cloneWrap.querySelector('.textarea');
+    const btnSize = cloneWrap.querySelector('.btn_size');
 
     cloneWrap.setAttribute('style', `top:${this.top}px;left:${this.left}px;`);
     cloneWrap.setAttribute('index', idx);
@@ -39,10 +41,13 @@ class Memo {
 
     cloneWrap.addEventListener('contextmenu', e => this.add(e, cloneWrap));
     cloneWrap.addEventListener('click', e => this.setPosition(e));
-    cloneWrap.addEventListener('dragstart', e => this.memoDragStart(e));
-    cloneWrap.addEventListener('dragend', e => this.memoDragEnd(e));
+    cloneHeader.addEventListener('dragstart', e => this.memoDragStart(e), false);
+    cloneHeader.addEventListener('dragend', e => this.memoDragEnd(e), false);
     btnClose.addEventListener('click', e => this.remove(e));
     cloneTextArea.addEventListener('keyup', e => this.editTextArea(e));
+    btnSize.addEventListener('mousedown', e => this.memoSizeDragStart(e));
+    btnSize.addEventListener('mouseup', e => this.memoSizeDragEnd(e));
+    btnSize.addEventListener('mousemove', e => this.memoSizeDrag(e));
 
     this.addMemoListItems(this);
 
@@ -58,9 +63,11 @@ class Memo {
 
     const wrap = document.querySelector('#wrap');
     const clone = target.cloneNode(true);
+    const cloneHeader = clone.querySelector('.header');
     const cloneTextArea = clone.children[1].children[0];
     const btnClose = clone.querySelector('.btn_close');
     const textArea = target.children[1].children[0];
+    const btnSize = clone.querySelector('.btn_size');
     const { width, height } = textArea.getBoundingClientRect();
     const MaxIndex = wrap.children.length;
 
@@ -70,10 +77,12 @@ class Memo {
 
     clone.addEventListener('contextmenu', e => this.add(e, clone));
     clone.addEventListener('click', e => this.setPosition(e));
-    clone.addEventListener('dragstart', e => this.memoDragStart(e));
-    clone.addEventListener('dragend', e => this.memoDragEnd(e));
+    cloneHeader.addEventListener('dragstart', e => this.memoDragStart(e));
+    cloneHeader.addEventListener('dragend', e => this.memoDragEnd(e));
     btnClose.addEventListener('click', e => this.remove(e));
     cloneTextArea.addEventListener('keyup', e => this.editTextArea(e));
+    btnSize.addEventListener('dragstart', e => this.memoSizeDragStart(e));
+    btnSize.addEventListener('dragend', e => this.memoSizeDragEnd(e));
 
     this.addMemoListItems({
       content: '',
@@ -122,7 +131,7 @@ class Memo {
     this.prevLeft = e.pageX;
   };
   memoDragEnd(e) {
-    const target = e.currentTarget;
+    const target = e.currentTarget.parentNode;
     const targetTop = target.offsetTop;
     const targetLeft = target.offsetLeft;
     const top = e.pageY - this.prevTop + targetTop;
@@ -132,6 +141,23 @@ class Memo {
     const listItems = Memo.listItems.map((item, idx) => idx === index ? { ...item, top, left } : item);
 
     this.setMemoListItems(listItems);
+  };
+  memoSizeDragStart(e) {
+    this.isDrawing = true;
+  };
+  memoSizeDragEnd(e) {
+    this.isDrawing = false;
+  };
+  memoSizeDrag(e) {
+    if (this.isDrawing) {
+      const target = e.target.previousElementSibling;
+      const memo = target.parentNode.parentNode;
+      const top = memo.offsetTop;
+      const left = memo.offsetLeft;
+      
+      target.style.width = e.pageX - left - 15 + 'px';
+      target.style.height = e.pageY - top - 25 + 'px'
+    }
   };
 
   getMemoListItems() {
