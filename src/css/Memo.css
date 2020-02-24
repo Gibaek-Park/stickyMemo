@@ -74,6 +74,8 @@ q:after {
   position: absolute;
   background-color: lightyellow;
   border: 1px solid #eee;
+  resize: both;
+  overflow: auto;
 }
 
 .content {
