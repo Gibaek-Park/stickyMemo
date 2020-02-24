@@ -39,6 +39,7 @@ class Memo {
 
     cloneWrap.addEventListener('contextmenu', e => this.add(e, cloneWrap));
     cloneWrap.addEventListener('click', e => this.setPosition(e));
+    cloneWrap.addEventListener('dragstart', e => this.dragStart(e));
     cloneWrap.addEventListener('dragend', e => this.dragEnd(e));
     btnClose.addEventListener('click', e => this.remove(e));
     cloneTextArea.addEventListener('keyup', e => this.editTextArea(e));
@@ -69,6 +70,7 @@ class Memo {
 
     clone.addEventListener('contextmenu', e => this.add(e, clone));
     clone.addEventListener('click', e => this.setPosition(e));
+    clone.addEventListener('dragstart', e => this.dragStart(e));
     clone.addEventListener('dragend', e => this.dragEnd(e));
     btnClose.addEventListener('click', e => this.remove(e));
     cloneTextArea.addEventListener('keyup', e => this.editTextArea(e));
@@ -115,10 +117,16 @@ class Memo {
 
     this.setMemoListItems(listItems);
   };
+  dragStart(e) {
+    this.prevTop = e.pageY;
+    this.prevLeft = e.pageX;
+  };
   dragEnd(e) {
     const target = e.currentTarget;
-    const top = e.pageY;
-    const left = e.pageX;
+    const targetTop = target.offsetTop;
+    const targetLeft = target.offsetLeft;
+    const top = e.pageY - this.prevTop + targetTop;
+    const left = e.pageX - this.prevLeft + targetLeft;
     target.style = `top:${top}px;left:${left}px`;
     const index = Number(target.getAttribute('index'));
     const listItems = Memo.listItems.map((item, idx) => idx === index ? { ...item, top, left } : item);
