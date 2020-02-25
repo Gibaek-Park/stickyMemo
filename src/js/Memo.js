@@ -112,12 +112,14 @@ class Memo {
   };
 
   remove(e) {
-    const target = e.target.parentNode.parentNode;
-    const index = Number(target.getAttribute('index'));
+    if (Memo.listItems.length > 1) {
+      const target = e.target.parentNode.parentNode;
+      const index = Number(target.getAttribute('index'));
 
-    wrap.removeChild(target);
-    this.updateMemoListItems(index);
-    this.sortMemoListItems(index, TYPES.DELETE);
+      wrap.removeChild(target);
+      this.updateMemoListItems(index);
+      this.sortMemoListItems(index, TYPES.DELETE);
+    }
   };
   editTextArea(e) {
     const content = e.target.textContent;
@@ -154,7 +156,7 @@ class Memo {
       const memo = target.parentNode.parentNode;
       const top = memo.offsetTop;
       const left = memo.offsetLeft;
-      
+
       target.style.width = e.pageX - left - 15 + 'px';
       target.style.height = e.pageY - top - 25 + 'px'
     }
