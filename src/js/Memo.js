@@ -156,9 +156,16 @@ class Memo {
       const memo = target.parentNode.parentNode;
       const top = memo.offsetTop;
       const left = memo.offsetLeft;
+      const width = e.pageX - left - 15;
+      const height = e.pageY - top - 25;
 
-      target.style.width = e.pageX - left - 15 + 'px';
-      target.style.height = e.pageY - top - 25 + 'px'
+      target.style.width = width + 'px';
+      target.style.height = height + 'px';
+      
+      const index = Number(target.getAttribute('index'));
+      const listItems = Memo.listItems.map((item, idx) => idx === index ? { ...item, width, height } : item);
+
+      this.setMemoListItems(listItems);
     }
   };
 
